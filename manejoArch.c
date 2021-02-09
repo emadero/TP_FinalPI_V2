@@ -163,7 +163,7 @@ int leerArboles(FILE * archivoArboles, arbolesADT adt, int maxCol, int barrioCol
  static int query3(arbolesADT adt, TQ3 ** auxVec, int * auxDim){
 
     int error=0;
-    TQ3 * vec3 = resolQ3(adt,auxDim); // Hacemos un malloc desde el resolQ3 QUE NUNCA libero
+    TQ3 * vec3 = resolQ3(adt,auxDim); 
 
     if (vec3==NULL){
         mensajeError(SIN_MEMORIA);
