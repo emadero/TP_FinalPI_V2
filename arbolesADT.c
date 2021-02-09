@@ -29,7 +29,7 @@ typedef struct Tnodo4 * TList4;
 
 struct arbolesCDT {
     TList3 list3;
-    int dim23;
+    int dim3;
 
     TList4 list4;
     int dim4;
@@ -66,10 +66,15 @@ static TList3 agregaBarrioRec (TList3 list, const char * barrio, int poblacion, 
 int agregaBarrio (arbolesADT adt, const char * barrio, int poblacion) {
     int agregado = 0;
     adt->list3=agregaBarrioRec(adt->list3, barrio, poblacion, &agregado);
-    adt->dim23 += agregado;
+    adt->dim3 += agregado;
     return adt->list3!=NULL;
 }
 
+/* Funcion Auxiliar A: Recibe un vector de estructuras, un entero y un vector de caracteres. 
+Me guarda informacion sobre:
+    - Calles y cantidad de arboles en cada una. 
+    - Especies y cantidad de arboles de cada una.
+*/
 static calleArbol * valorHaciaVector(calleArbol * vec, int * dim, const char * nombre) {
     int i;
     for (i=0 ; i<*dim ; i++) {
@@ -90,6 +95,8 @@ static calleArbol * valorHaciaVector(calleArbol * vec, int * dim, const char * n
     return vec;
 }
 
+/* Funcion Auxiliar B: Recibe un barrio, una calle, un arbol y el diametro del mismo. 
+La funcion busca el barrio y guarda informacion sobre calle, y arboles del barrio. */
 static int buscaBarrio(TList3 list, const char * barrio, const char * calle, const char * arbol, double diam) {
     int c;
     if (list==NULL || (c=strcasecmp(barrio, list->Q3.barrio))<0)
@@ -145,6 +152,9 @@ int agregaArbol (arbolesADT adt, const char * barrio, const char * calle, const 
     return adt->list4!=NULL && buscaBarrio(adt->list3, barrio, calle, arbol, diam);
 }
 
+/* Funcion Auxiliar C: Recibe un vector de estructuras, y la dimension del mismo. 
+    Compara los campos .dato entre dim estructuras y guarda el mayor de todos.
+*/
 static calleArbol popValor(calleArbol * vec, int dim) {
   calleArbol aux;
   aux.dato=0;
@@ -156,10 +166,10 @@ static calleArbol popValor(calleArbol * vec, int dim) {
 }
 
 TQ3 * resolQ3(arbolesADT adt, int * dim) {
-    TQ3 *vec = malloc(sizeof(TQ3) * adt->dim23);
+    TQ3 *vec = malloc(sizeof(TQ3) * adt->dim3);
     if (vec==NULL)
         return NULL;
-    *dim=adt->dim23;
+    *dim=adt->dim3;
     size_t k = 0;
     TList3 aux = adt->list3;
     while (aux != NULL) {
@@ -170,13 +180,22 @@ TQ3 * resolQ3(arbolesADT adt, int * dim) {
     return vec;
 }
 
+/* Funcion Auxiliar D: Recibe un double.
+   Trunca el valor recibido a dos decimales.
+*/
 static void truncar(double *val) {
     *val *= 100;
     int aux = (int)*val;
     *val = aux/100.0;
 }
 
-int compare (const void * a, const void * b)
+/* Funcion Auxiliar E: 
+    Compara entre dos valores del tipo DOUBLE, contenidos en una estructura del tipo CalleArbolB.
+    Retorna 0 si son considerados iguales. 
+    Retorna 1 si el segundo es mayor que el primero.
+    Retorna -1 si el segundo es menor que el primero.
+*/
+static int compare (const void * a, const void * b)
 {
   double epsilon=0.0001;
   double c2 = ((calleArbolB *)b)->dato;
@@ -187,10 +206,24 @@ int compare (const void * a, const void * b)
   return -1;
 }
 
+/* Funcion Auxiliar F: 
+    Compara entre dos valores del tipo DOUBLE,
+    Retorna 0 si son considerados iguales. 
+    Retorna 1 si el segundo es mayor que el primero.
+    Retorna -1 si el segundo es menor que el primero.
+*/
+static int compare2(double a, double  b)
+{
+  double epsilon=0.0001;
+  if(fabs(a-b)<epsilon)
+    return 0;
+  if (a > b) return 1;
+  return -1;
+}
 
 
 calleArbolB * resolQ1 (arbolesADT adt, int *dim){
-    *dim = adt->dim23;
+    *dim = adt->dim3;
     calleArbolB * vecInf = malloc( sizeof(calleArbolB) * (*dim));
     if (vecInf==NULL)
         return NULL;
@@ -214,8 +247,53 @@ calleArbolB * resolQ1 (arbolesADT adt, int *dim){
 }
 
 
+static int cmpShift(const void* lhs, const void* rhs)
+{
+    return strcmp(((calleArbolC*)lhs)->nombre, ((calleArbolC*)rhs)->nombre);
+}
 
-TQ4 * resolveQ4(arbolesADT adt, int * dim) {
+static void sort_data(calleArbolC shift_data[], int *num_shifts)
+{
+    qsort(shift_data, *num_shifts, sizeof(calleArbolC), cmpShift);
+}
+
+calleArbolC resolQ2B ( calleArbol * calleArbolVec, int dim, int poblacion, char * hood){
+   int  i;
+    calleArbolC aux = {hood,NULL,0};
+    double maxValue = 0;
+    double valEsp =0;
+    int pos = 0;
+    for ( i = 0; i < dim; i++ ){
+        valEsp = calleArbolVec[i].dato/ ((double)poblacion);
+        if ( compare2( valEsp, maxValue) ){
+            maxValue = valEsp;
+            pos = i;
+        }
+    }
+
+    aux.nombre2= calleArbolVec[pos].nombre;
+    truncar(&maxValue);
+    aux.dato = maxValue;
+    return aux;
+}
+
+calleArbolC * resolQ2( arbolesADT adt, int *dim ){
+    *dim = adt->dim3;
+    calleArbolC * vecInf = malloc( sizeof(calleArbolC) * (*dim));
+    if (vecInf==NULL)
+        return NULL;
+    TList3 aux = adt->list3;
+    int i =0;
+    while ( aux != NULL && i < *dim ) {
+       vecInf[i] = resolQ2B( aux->ArbolVec, aux-> dimArbolVec, aux->Q3.poblacion, aux->Q3.barrio);
+       aux = aux->cola;
+        i++;
+    }
+    sort_data( vecInf, dim);
+    return vecInf;
+}
+
+TQ4 * resolQ4(arbolesADT adt, int * dim) {
     TQ4 *vec = malloc(sizeof(TQ4) * adt->dim4);
     if (vec==NULL)
         return NULL;

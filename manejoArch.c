@@ -136,7 +136,27 @@ int leerArboles(FILE * archivoArboles, arbolesADT adt, int maxCol, int barrioCol
 
  }
 
+ static int query2(arbolesADT adt, int * auxDim){
+     int error = 0;
+     calleArbolC * vec1 = resolQ2(adt, auxDim);
+      if (vec1==NULL){
+        mensajeError(SIN_MEMORIA);
+        return SIN_MEMORIA;
+    }
+    FILE * Q2File;
+    error = createFile(&Q2File,"query2.csv");
+    if (error){
+        return error;
+    }
+    fputs(HEADERS_QUERY2,Q2File);
 
+    for (int i=0;i<*auxDim;i++){
+      fprintf(Q2File,"%s;%s;%g\n", vec1[i].nombre, vec1[i].nombre2, vec1[i].dato);
+    }
+    fclose(Q2File);
+    return 0;
+
+ }
 
  static int query3(arbolesADT adt, TQ3 ** auxVec, int * auxDim){
 
@@ -170,7 +190,7 @@ int leerArboles(FILE * archivoArboles, arbolesADT adt, int maxCol, int barrioCol
 static int query4(arbolesADT adt){
 
     int dim;
-    TQ4 * vec4 = resolveQ4(adt,&dim);
+    TQ4 * vec4 = resolQ4(adt,&dim);
     if (vec4==NULL){
         mensajeError(SIN_MEMORIA);
         return SIN_MEMORIA;
@@ -206,6 +226,10 @@ int resolverQuerys (arbolesADT adt) {
       return error;
 
     error = query1(adt, &auxDim);
+ if (error)
+    return error;
+
+    error = query2(adt, &auxDim);
  if (error)
     return error;
 
