@@ -247,11 +247,16 @@ calleArbolB * resolQ1 (arbolesADT adt, int *dim){
 }
 
 
+/* Funcion Auxiliar F: 
+    Compara entre dos vectores de caracteres contenidos en una estructura del tipo CalleArbolC. */
 static int cmpShift(const void* lhs, const void* rhs)
 {
     return strcmp(((calleArbolC*)lhs)->nombre, ((calleArbolC*)rhs)->nombre);
 }
 
+
+/* Funcion Auxiliar G: 
+    Ordena vector de estructuras del tipo calleArbolC .*/
 static void sort_data(calleArbolC shift_data[], int *num_shifts)
 {
     qsort(shift_data, *num_shifts, sizeof(calleArbolC), cmpShift);

@@ -35,7 +35,8 @@ int main (int args, const char * argv[]) {
     error=resolverQuerys(adt);
     if (error)
       return error;
-
+    
+    freeADT(adt);
     return 0;
 
 }

@@ -129,9 +129,10 @@ int leerArboles(FILE * archivoArboles, arbolesADT adt, int maxCol, int barrioCol
     fputs(HEADERS_QUERY1,Q1File);
 
     for (int i=0;i<*auxDim;i++){
-      fprintf(Q1File,"%s;%g\n", vec1[i].nombre, vec1[i].dato);
+      fprintf(Q1File,"%s;%2g\n", vec1[i].nombre, vec1[i].dato);
     }
     fclose(Q1File);
+    free(vec1);
     return 0;
 
  }
@@ -151,9 +152,10 @@ int leerArboles(FILE * archivoArboles, arbolesADT adt, int maxCol, int barrioCol
     fputs(HEADERS_QUERY2,Q2File);
 
     for (int i=0;i<*auxDim;i++){
-      fprintf(Q2File,"%s;%s;%g\n", vec1[i].nombre, vec1[i].nombre2, vec1[i].dato);
+      fprintf(Q2File,"%s;%s;%2g\n", vec1[i].nombre, vec1[i].nombre2, vec1[i].dato);
     }
     fclose(Q2File);
+    free(vec1);
     return 0;
 
  }
@@ -161,7 +163,7 @@ int leerArboles(FILE * archivoArboles, arbolesADT adt, int maxCol, int barrioCol
  static int query3(arbolesADT adt, TQ3 ** auxVec, int * auxDim){
 
     int error=0;
-    TQ3 * vec3 = resolQ3(adt,auxDim);
+    TQ3 * vec3 = resolQ3(adt,auxDim); // Hacemos un malloc desde el resolQ3 QUE NUNCA libero
 
     if (vec3==NULL){
         mensajeError(SIN_MEMORIA);
@@ -184,6 +186,7 @@ int leerArboles(FILE * archivoArboles, arbolesADT adt, int maxCol, int barrioCol
     }
 
     fclose(Q3File);
+    free(vec3);
     return 0;
 }
 
@@ -214,25 +217,31 @@ static int query4(arbolesADT adt){
 
 int resolverQuerys (arbolesADT adt) {
   int error;
-  error = query4(adt);
-  if (error)
-      return error;
 
+    error = query4(adt);
+    if (error){
+        return error;
+
+}
   TQ3 * auxVec;
   int auxDim;
 
     error = query3(adt,&auxVec,&auxDim);
-  if (error)
-      return error;
+    if (error){
+        return error;
+}
 
     error = query1(adt, &auxDim);
- if (error)
-    return error;
+    if (error){
+        return error;
+ }
 
     error = query2(adt, &auxDim);
- if (error)
-    return error;
-
-  printf("Los archivos fueron creados con exito.!\n");
+    if (error){
+        return error;
+    }
+    
+  printf("Los archivos fueron creados con exito.\n");
+  printf("Puede observar los queries en el directorio local. \n");
   return 0;
 }

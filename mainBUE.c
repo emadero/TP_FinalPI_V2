@@ -36,6 +36,6 @@ int main (int args, const char * argv[]) {
     if (error)
       return error;
 
-
+    freeADT(adt);
     return 0;
 }
