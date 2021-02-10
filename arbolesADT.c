@@ -235,11 +235,7 @@ calleArbolB * resolQ1 (arbolesADT adt, int *dim){
     while ( aux != NULL && i < *dim ) {
        auxProm = ( aux->Q3.diametroTotal / (double)(aux->Q3.cantArb) );
         truncar(&auxProm);
-        //vecInf[i].nombre = malloc( sizeof(char) * strlen( (aux->Q3.barrio)+ 1));
-        //if ( vecInf[i].nombre == NULL || errno == ENOMEM)
-            //return NULL;
         vecInf[i].nombre = aux->Q3.barrio;
-        //strcpy(vecInf[i].nombre, aux->Q3.barrio);
         vecInf[i].dato = auxProm;
         aux = aux->cola;
         i++;
