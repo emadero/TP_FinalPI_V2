@@ -215,7 +215,6 @@ static int compare (const void * a, const void * b)
 static int compare2(double a, double  b)
 {
   double epsilon=0.0000001;
-  printf("Los valores a comparar son %.10f y %.10f \n", a,b);
 if( fabs(a-b)<epsilon)
     return 0;
 else if ( a > b ) 
@@ -268,10 +267,8 @@ calleArbolC resolQ2B ( calleArbol * calleArbolVec, int dim, int poblacion, char 
     int pos = 0;
     for ( i = 0; i < dim; i++ ){
         valEsp = calleArbolVec[i].dato/ ((double)poblacion);
-        printf("Este es el valor que toma el cociente %.10f \n", valEsp );
         if ( compare2( valEsp, maxValue) == 1 ){
             maxValue = valEsp;
-            printf("Aca cambie el valor, ahora el max es %.10f \n", maxValue);
             pos = i;
         }
     }
