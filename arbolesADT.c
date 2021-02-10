@@ -7,7 +7,7 @@
 #include <errno.h>
 #include <math.h>
 #define BLOQUE 15
-#define EPSILON 0.00001
+#define EPSILON 0.0000000001
 
 struct Tnodo3 {
     TQ3 Q3;
@@ -214,11 +214,13 @@ static int compare (const void * a, const void * b)
 */
 static int compare2(double a, double  b)
 {
-  double epsilon=0.0001;
-  if(fabs(a-b)<epsilon)
+  double epsilon=0.0000001;
+  printf("Los valores a comparar son %.10f y %.10f \n", a,b);
+if( fabs(a-b)<epsilon)
     return 0;
-  if (a > b) return 1;
-  return -1;
+else if ( a > b ) 
+    return 1;
+return -1;
 }
 
 
@@ -270,8 +272,10 @@ calleArbolC resolQ2B ( calleArbol * calleArbolVec, int dim, int poblacion, char 
     int pos = 0;
     for ( i = 0; i < dim; i++ ){
         valEsp = calleArbolVec[i].dato/ ((double)poblacion);
-        if ( compare2( valEsp, maxValue) ){
+        printf("Este es el valor que toma el cociente %.10f \n", valEsp );
+        if ( compare2( valEsp, maxValue) == 1 ){
             maxValue = valEsp;
+            printf("Aca cambie el valor, ahora el max es %.10f \n", maxValue);
             pos = i;
         }
     }

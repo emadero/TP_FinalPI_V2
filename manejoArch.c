@@ -23,7 +23,10 @@ void mensajeError (int codigo) {
             fprintf(stderr,"Asginacion de memoria invalida.\n");
             break;
         case ERROR_CREANDO:
-            fprintf(stderr,"Los archivos no pueden ser creados.n");
+            fprintf(stderr,"Los archivos no pueden ser creados.\n");
+            break;
+        case ERROR_DEF:
+            fprintf(stderr,"No se encuentra definido VAN ni BUE.\n");
             break;
     }
 }
