@@ -77,4 +77,11 @@ En el direcotorio en el cual es corrido el programa podrá observar los archivos
 
 Cada uno estos tendran la informacion correspondiente a cada query.
 
+Nota Obtenida: 7
+Correciones hechas por los profesores:
+- Habría que validar cuando se hace un fopen que el archivo exista, porque sino existe falla. (Funcionamiento)
+- Verificar que si se agrega un dato en los archivos csv (un barrio más) se rompe. (Funcionamiento)
+- No deberíamos utilizar toda la información de una, deberíamos ir iterando por la misma (Diseño)
+- Error en constante simbolica de Vancouver en la de CALLE, era otra columna en el archivo csv. (Funcionamiento)
+
 --------------------------------------------------------------------------------------------------------------------------
